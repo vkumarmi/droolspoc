@@ -1,0 +1,20 @@
+import com.golo.poc.Cart;
+import com.golo.poc.CartItem;
+import com.golo.poc.CartStatus;
+import com.golo.poc.Customer;
+import com.golo.poc.Product;
+import com.golo.poc.RuleEngine;
+
+rule "buy 2 get 10 percent off"
+when
+$cart : Cart(cartItems.size>=0)
+then
+System.out.println("\nIs Out-Of Stock Rule");
+System.out.println("************************************");
+String error = "Can't process as " +  $cartItem.getProduct().getDesc() + " is Out-Of-Stock" ;
+System.out.println(error);
+$cartItem.setErrors(true);
+$cartItem.setError(error);
+$cartItem.getCart().logItemError(pendingItemKey($cartItem), $cartItem);
+outOfStockProducts.add($cartItem.getProduct());
+end
